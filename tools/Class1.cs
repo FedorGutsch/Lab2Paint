@@ -2,63 +2,52 @@
 
 namespace tools
 {
-    public class ByHand
+    public class Workspace()
     {
+        Stack<figure> figureList;
 
+        public void AddFigure(figure figure)
+        {
+            figureList.Push(figure); 
+        }
+        public figure RemoveFigure(figure figure)
+        {
+            return figureList.Pop();
+        }
     }
 
-    public class Rectangle
+
+    public class figure
     {
-        int x;
-        int y;
-        int size;
+        int type; 
         Color color;
 
-        public Point Location 
+        List<Point>? points;
+        
+        public figure(int type, Color color, List<Point> point)
         {
-            get {return new Point(x, y);}
-            set {
-                    x = value.X;
-                    y = value.Y;
-                } 
+            Type = type;
+            Color = color;
+            Points = point;
         }
 
-
-        public int X
+        public int Type
         {
-            get { return x; }          
+            get { return type; }
+            set { type  = value; }
         }
-        public int Y
-        {
-            get { return y; }
-        }
-
-
-        public int Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
-        public Color Color
+        public Color Color 
         {
             get { return color; }
             set { color = value; }
         }
-
-        public Rectangle(int x, int y, int size, Color color) 
-        { 
-            this.x = x;
-            this.y = y;
-            this.Size = size;
-            this.Color = color;
-
-        }
-        public Rectangle()
+        public List<Point> Points
         {
-            x = 0; y = 0;
-            
-            size = 0;
-            color = Color.White;
+            get { return points; }
+            set { points = value; }
         }
+
+        
     }
+
 }
