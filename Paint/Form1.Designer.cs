@@ -99,35 +99,35 @@
             // кистьToolStripMenuItem
             // 
             кистьToolStripMenuItem.Name = "кистьToolStripMenuItem";
-            кистьToolStripMenuItem.Size = new Size(180, 22);
+            кистьToolStripMenuItem.Size = new Size(163, 22);
             кистьToolStripMenuItem.Text = "Кисть";
             кистьToolStripMenuItem.Click += кистьToolStripMenuItem_Click;
             // 
             // прямаяToolStripMenuItem
             // 
             прямаяToolStripMenuItem.Name = "прямаяToolStripMenuItem";
-            прямаяToolStripMenuItem.Size = new Size(180, 22);
+            прямаяToolStripMenuItem.Size = new Size(163, 22);
             прямаяToolStripMenuItem.Text = "Прямая";
             прямаяToolStripMenuItem.Click += прямаяToolStripMenuItem_Click;
             // 
             // прямоугольникToolStripMenuItem
             // 
             прямоугольникToolStripMenuItem.Name = "прямоугольникToolStripMenuItem";
-            прямоугольникToolStripMenuItem.Size = new Size(180, 22);
+            прямоугольникToolStripMenuItem.Size = new Size(163, 22);
             прямоугольникToolStripMenuItem.Text = "Прямоугольник";
             прямоугольникToolStripMenuItem.Click += прямоугольникToolStripMenuItem_Click;
             // 
             // кругToolStripMenuItem
             // 
             кругToolStripMenuItem.Name = "кругToolStripMenuItem";
-            кругToolStripMenuItem.Size = new Size(180, 22);
+            кругToolStripMenuItem.Size = new Size(163, 22);
             кругToolStripMenuItem.Text = "Круг";
             кругToolStripMenuItem.Click += кругToolStripMenuItem_Click;
             // 
             // ластикToolStripMenuItem
             // 
             ластикToolStripMenuItem.Name = "ластикToolStripMenuItem";
-            ластикToolStripMenuItem.Size = new Size(180, 22);
+            ластикToolStripMenuItem.Size = new Size(163, 22);
             ластикToolStripMenuItem.Text = "Ластик";
             ластикToolStripMenuItem.Click += ластикToolStripMenuItem_Click;
             // 
@@ -136,6 +136,7 @@
             палитраToolStripMenuItem.Name = "палитраToolStripMenuItem";
             палитраToolStripMenuItem.Size = new Size(66, 20);
             палитраToolStripMenuItem.Text = "Палитра";
+            палитраToolStripMenuItem.Click += палитраToolStripMenuItem_Click;
             // 
             // pictureBox1
             // 
