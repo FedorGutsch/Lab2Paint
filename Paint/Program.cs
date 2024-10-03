@@ -1,4 +1,4 @@
-namespace OOP_Lab2
+namespace Paint
 {
     internal static class Program
     {
