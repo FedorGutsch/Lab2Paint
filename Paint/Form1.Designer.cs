@@ -68,25 +68,26 @@
             // импортироватьToolStripMenuItem
             // 
             импортироватьToolStripMenuItem.Name = "импортироватьToolStripMenuItem";
-            импортироватьToolStripMenuItem.Size = new Size(133, 22);
+            импортироватьToolStripMenuItem.Size = new Size(180, 22);
             импортироватьToolStripMenuItem.Text = "Открыть";
             // 
             // сохранитьToolStripMenuItem
             // 
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(133, 22);
+            сохранитьToolStripMenuItem.Size = new Size(180, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
+            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
             // 
             // назадToolStripMenuItem
             // 
             назадToolStripMenuItem.Name = "назадToolStripMenuItem";
-            назадToolStripMenuItem.Size = new Size(133, 22);
+            назадToolStripMenuItem.Size = new Size(180, 22);
             назадToolStripMenuItem.Text = "Назад";
             // 
             // впередToolStripMenuItem
             // 
             впередToolStripMenuItem.Name = "впередToolStripMenuItem";
-            впередToolStripMenuItem.Size = new Size(133, 22);
+            впередToolStripMenuItem.Size = new Size(180, 22);
             впередToolStripMenuItem.Text = "Вперед";
             // 
             // инструментыToolStripMenuItem

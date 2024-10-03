@@ -123,7 +123,12 @@ namespace Paint
 
         private void ïğÿìàÿToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
+        }
+
+        private void ñîõğàíèòüToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
