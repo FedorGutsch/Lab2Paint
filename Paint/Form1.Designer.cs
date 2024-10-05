@@ -70,27 +70,27 @@
             // импортироватьToolStripMenuItem
             // 
             импортироватьToolStripMenuItem.Name = "импортироватьToolStripMenuItem";
-            импортироватьToolStripMenuItem.Size = new Size(180, 22);
+            импортироватьToolStripMenuItem.Size = new Size(133, 22);
             импортироватьToolStripMenuItem.Text = "Открыть";
             импортироватьToolStripMenuItem.Click += импортироватьToolStripMenuItem_Click;
             // 
             // сохранитьToolStripMenuItem
             // 
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(180, 22);
+            сохранитьToolStripMenuItem.Size = new Size(133, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
             сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
             // 
             // назадToolStripMenuItem
             // 
             назадToolStripMenuItem.Name = "назадToolStripMenuItem";
-            назадToolStripMenuItem.Size = new Size(180, 22);
+            назадToolStripMenuItem.Size = new Size(133, 22);
             назадToolStripMenuItem.Text = "Назад";
             // 
             // впередToolStripMenuItem
             // 
             впередToolStripMenuItem.Name = "впередToolStripMenuItem";
-            впередToolStripMenuItem.Size = new Size(180, 22);
+            впередToolStripMenuItem.Size = new Size(133, 22);
             впередToolStripMenuItem.Text = "Вперед";
             // 
             // инструментыToolStripMenuItem
@@ -150,6 +150,7 @@
             pictureBox1.Size = new Size(671, 291);
             pictureBox1.TabIndex = 8;
             pictureBox1.TabStop = false;
+            pictureBox1.Paint += pictureBox1_Paint;
             pictureBox1.MouseDown += pictureBox1_MouseDown;
             pictureBox1.MouseMove += pictureBox1_MouseMove;
             pictureBox1.MouseUp += pictureBox1_MouseUp;
