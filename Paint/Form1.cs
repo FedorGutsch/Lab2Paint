@@ -21,7 +21,7 @@ namespace Paint
 
 
 
-        delegate void Ddraw(List<Point> points);
+        delegate void Ddraw(List<Point> points, Color color);
         public Form1()
         {
             InitializeComponent();
@@ -39,38 +39,38 @@ namespace Paint
 
         bool flag = false;
 
-        void Ellipse(List<Point> points)
+        void Ellipse(List<Point> points, Color color)
         {
             var p = points[0];
 
             //Graphics gr = CreateGraphics();           
-            gr.DrawEllipse(new Pen(colorOfPen), p.X, p.Y, 50, 50);
+            gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
 
-            wp.AddFigure(new figure(1, colorOfPen, points));
+            wp.AddFigure(new figure(1, color, points));
         }
 
-        void Curve(List<Point> points)
+        void Curve(List<Point> points, Color color)
         {
             var p = points[0];
-            gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
+            gr.DrawRectangle(new Pen(color), p.X, p.Y, 1, 1);
 
-            wp.AddFigure(new figure(3, colorOfPen, points));
+            wp.AddFigure(new figure(3, color, points));
         }
 
-        void Eraser(List<Point> points)
+        void Eraser(List<Point> points, Color color)
         {
             var p = points[0];
-            gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
+            gr.DrawRectangle(new Pen(color), p.X, p.Y, 1, 1);
             wp.AddFigure(new figure(4, Color.White, points));
         }
 
-        void Line(List<Point> points)
+        void Line(List<Point> points, Color color)
         {
             var p1 = points[0];
             var p2 = points[1];
 
-            gr.DrawLine(new Pen(colorOfPen), p1, p2);
-            wp.AddFigure(new figure(2, colorOfPen, points));
+            gr.DrawLine(new Pen(color), p1, p2);
+            wp.AddFigure(new figure(2, color, points));
         }
 
         private Rectangle pictureBox1OriginalRectangle;
@@ -118,7 +118,7 @@ namespace Paint
 
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
-                my_draw(points);
+                my_draw(points, colorOfPen);
 
                 if (my_draw == Ellipse)
                 {
@@ -162,7 +162,7 @@ namespace Paint
                     List<Point> points = new List<Point>();
                     points.Add(new Point(e.X, e.Y));
 
-                    my_draw(points);
+                    my_draw(points, colorOfPen);
                     pictureBox1.Image = bitfield;
                 }
             }
@@ -176,7 +176,7 @@ namespace Paint
 
                 points.Add((new Point(e.X, e.Y)));
 
-                my_draw(points);
+                my_draw(points, colorOfPen);
                 pictureBox1.Image = bitfield;
                 points.Clear();
 
@@ -239,11 +239,8 @@ namespace Paint
                 {
                     wp.figureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
                 }
-            }
-
-            
-
-            drawFromStack(wp.figureList);
+            }           
+            drawFromStack(wp.figureList);            
         }
 
 
@@ -272,32 +269,37 @@ namespace Paint
                 {
                     case 0:
                         {
+                            
                             my_draw = Ellipse;
-                            my_draw(f1.Points);
+                            my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 1:
                         {
+                            
                             my_draw = Ellipse;
-                            my_draw(f1.Points);
+                            my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 2:
                         {
+                            
                             my_draw = Line;
-                            my_draw(f1.Points);
+                            my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 3:
                         {
+                           
                             my_draw = Curve;
-                            my_draw(f1.Points);
+                            my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 4:
                         {
+                           
                             my_draw = Eraser;
-                            my_draw(f1.Points);
+                            my_draw(f1.Points, Color.White);
                             break;
                         }
                 }
