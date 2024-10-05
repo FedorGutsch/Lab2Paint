@@ -194,10 +194,10 @@ namespace Paint
             my_draw = Line;
         }
 
-        private void ïàëèòğàToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ñîõğàíèòüToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
+            {               
                 colorOfPen = colorDialog1.Color;
             }
         }
