@@ -30,7 +30,7 @@ namespace Paint
         bool flag = false;
         void Ellipse(List<Point> points, Color color)
         {
-            var p = points[0];
+            var p = points[0];          
             gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
             wp.AddFigure(new figure(1, color, points));
         }
@@ -215,7 +215,7 @@ namespace Paint
             saveFileDialog1.Title = "Сохранить файл как";
             saveFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
             saveFileDialog1.AddExtension = true; // Добавление расширения, если его нет
-
+            
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveFileDialog1.FileName;
@@ -227,7 +227,7 @@ namespace Paint
                     Console.WriteLine("Объект сериализован");
                 }
             }
-
+            
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -250,15 +250,15 @@ namespace Paint
                 {
                     wp.figureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
                 }
-            }
-            drawFromStack(wp.figureList);
+            }           
+            drawFromStack(wp.figureList);            
         }
 
 
         // 0-rect 1-ellipse 2-line 3-curve 4-eraser
         public void drawFromStack(Stack<figure> st)
         {
-
+            
 
             using (Graphics g = Graphics.FromImage(bitfield))
             {
@@ -267,48 +267,48 @@ namespace Paint
             }
 
             List<figure> p = new List<figure>();
-
+            
             while (st.Count > 0)
             {
                 var f = st.Pop();
                 p.Add(f);
             }
 
-            foreach (figure f1 in p)
+            foreach (figure f1 in p) 
             {
                 switch (f1.Type)
                 {
                     case 0:
                         {
-
+                            
                             my_draw = Ellipse;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 1:
                         {
-
+                            
                             my_draw = Ellipse;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 2:
                         {
-
+                            
                             my_draw = Line;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 3:
                         {
-
+                           
                             my_draw = Curve;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 4:
                         {
-
+                           
                             my_draw = Eraser;
                             my_draw(f1.Points, Color.White);
                             break;

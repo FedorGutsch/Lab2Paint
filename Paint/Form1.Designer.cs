@@ -43,8 +43,8 @@
             ластикToolStripMenuItem = new ToolStripMenuItem();
             палитраToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
-            saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
+            saveFileDialog1 = new SaveFileDialog();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -72,6 +72,7 @@
             импортироватьToolStripMenuItem.Name = "импортироватьToolStripMenuItem";
             импортироватьToolStripMenuItem.Size = new Size(133, 22);
             импортироватьToolStripMenuItem.Text = "Открыть";
+            импортироватьToolStripMenuItem.Click += импортироватьToolStripMenuItem_Click;
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -149,6 +150,7 @@
             pictureBox1.Size = new Size(671, 291);
             pictureBox1.TabIndex = 8;
             pictureBox1.TabStop = false;
+            pictureBox1.Paint += pictureBox1_Paint;
             pictureBox1.MouseDown += pictureBox1_MouseDown;
             pictureBox1.MouseMove += pictureBox1_MouseMove;
             pictureBox1.MouseUp += pictureBox1_MouseUp;
@@ -195,7 +197,7 @@
         private ToolStripMenuItem ластикToolStripMenuItem;
         private ToolStripMenuItem палитраToolStripMenuItem;
         private PictureBox pictureBox1;
-        private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
+        private SaveFileDialog saveFileDialog1;
     }
 }
