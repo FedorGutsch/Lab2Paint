@@ -1,9 +1,9 @@
-
-
-using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Numerics;
+using System.Text.Json;
 using System.Windows.Forms;
 using tools;
+using System.Text.Json;
+using System.Drawing;
 
 namespace Paint
 {
@@ -14,7 +14,10 @@ namespace Paint
         Graphics gr;
         Color colorOfPen = Color.Gray;
         Workspace wp;
-        delegate void Ddraw(List<Point> points);
+
+
+
+        delegate void Ddraw(List<Point> points, Color color);
         public Form1()
         {
             InitializeComponent();
@@ -33,14 +36,17 @@ namespace Paint
 
         bool flag = false;
 
-        void Ellipse(List<Point> points)
+        void Ellipse(List<Point> points, Color color)
         {
-            var p = points[0];         
-            gr.DrawEllipse(new Pen(colorOfPen), p.X, p.Y, 50, 50);
-            wp.AddFigure(new figure(1, colorOfPen, points));
+            var p = points[0];
+
+            //Graphics gr = CreateGraphics();           
+            gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
+
+            wp.AddFigure(new figure(1, color, points));
         }
 
-        void Curve(List<Point> points)
+        void Curve(List<Point> points, Color color)
         {
             var p = points[0];
             //gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
@@ -58,7 +64,7 @@ namespace Paint
             }
         }
 
-        void Eraser(List<Point> points)
+        void Eraser(List<Point> points, Color color)
         {
             var p = points[0];
             //gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
@@ -76,13 +82,13 @@ namespace Paint
             }
         }
 
-        void Line(List<Point> points)
+        void Line(List<Point> points, Color color)
         {
             var p1 = points[0];
             var p2 = points[1];
 
-            gr.DrawLine(new Pen(colorOfPen), p1, p2);
-            wp.AddFigure(new figure(2, colorOfPen, points));
+            gr.DrawLine(new Pen(color), p1, p2);
+            wp.AddFigure(new figure(2, color, points));
         }
 
         void Rect(List<Point> points)
@@ -133,7 +139,7 @@ namespace Paint
             {
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
-                my_draw(points);
+                my_draw(points, colorOfPen);
 
                 if (my_draw == Ellipse)
                 {
@@ -211,26 +217,125 @@ namespace Paint
             my_draw = Line;
         }
 
-        private void палитраToolStripMenuItem_Click(object sender, EventArgs e)
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
         private void палитраToolStripMenuItem_Click(Object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
+            {               
                 colorOfPen = colorDialog1.Color;
             }
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private async void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            e.Graphics.DrawImage(bitfield, 0, 0);
+
+            saveFileDialog1.Filter = "JSON files (*.json)|*.json";
+            saveFileDialog1.Title = "Сохранить файл как";
+            saveFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
+            saveFileDialog1.AddExtension = true; // Добавление расширения, если его нет
+            
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog1.FileName;
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+
+                    await JsonSerializer.SerializeAsync<Stack<figure>>(fs, wp.figureList);
+                    Console.WriteLine("Объект сериализован");
+                }
+            }
+            
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void импортироватьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Filter = "JSON files (*.json)|*.json";
+            openFileDialog1.Title = "Открыть файл ";
+            openFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
+            openFileDialog1.AddExtension = true; // Добавление расширения, если его нет
 
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog1.FileName;
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+                    wp.figureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
+                }
+            }           
+            drawFromStack(wp.figureList);            
+        }
+
+
+        // 0-rect 1-ellipse 2-line 3-curve 4-eraser
+        public void drawFromStack(Stack<figure> st)
+        {
+            
+
+            using (Graphics g = Graphics.FromImage(bitfield))
+            {
+                g.Clear(Color.White);
+                pictureBox1.Invalidate();
+            }
+
+            List<figure> p = new List<figure>();
+            
+            while (st.Count > 0)
+            {
+                var f = st.Pop();
+                p.Add(f);
+            }
+
+            foreach (figure f1 in p) 
+            {
+                switch (f1.Type)
+                {
+                    case 0:
+                        {
+                            
+                            my_draw = Ellipse;
+                            my_draw(f1.Points, f1.Color);
+                            break;
+                        }
+                    case 1:
+                        {
+                            
+                            my_draw = Ellipse;
+                            my_draw(f1.Points, f1.Color);
+                            break;
+                        }
+                    case 2:
+                        {
+                            
+                            my_draw = Line;
+                            my_draw(f1.Points, f1.Color);
+                            break;
+                        }
+                    case 3:
+                        {
+                           
+                            my_draw = Curve;
+                            my_draw(f1.Points, f1.Color);
+                            break;
+                        }
+                    case 4:
+                        {
+                           
+                            my_draw = Eraser;
+                            my_draw(f1.Points, Color.White);
+                            break;
+                        }
+                }
+            }
+
+            
+
+
+            
         }
     }
 }

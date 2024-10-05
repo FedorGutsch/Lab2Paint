@@ -1,10 +1,15 @@
 ﻿using System.Drawing;
+using System.Xml.Schema;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace tools
 {
+
+    [Serializable]
     public class Workspace()
     {
-        Stack<figure> figureList = new Stack<figure>();
+        public Stack<figure> figureList = new Stack<figure>();
 
         public void AddFigure(figure figure)
         {
@@ -14,22 +19,31 @@ namespace tools
         {
             return figureList.Pop();
         }
-
+      
     }
 
 
     public class figure
     {
-        int type; 
-        Color color;
+        int type;
 
+        string colorCode;
+        
         List<Point>? points;
         
+
+
         public figure(int type, Color color, List<Point> points)
         {
             Type = type;
-            Color = color;
+            colorCode = ColorTranslator.ToHtml(color); 
+           
             Points = points;
+        }
+
+        public Color Color 
+        { 
+            get { return ColorTranslator.FromHtml(colorCode); }
         }
 
         public int Type
@@ -37,12 +51,8 @@ namespace tools
             get { return type; }
             set { type  = value; }
         }
-        public Color Color 
-        {
-            get { return color; }
-            set { color = value; }
-        }
-        public List<Point> Points
+        
+       public List<Point> Points
         {
             get { return points; }
             set { points = value; }
