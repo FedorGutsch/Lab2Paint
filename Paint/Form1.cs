@@ -1,10 +1,11 @@
 
 
 using System.Windows.Forms;
+using tools;
 
 namespace Paint
 {
-    
+
     public partial class Form1 : Form
     {
 
@@ -14,16 +15,21 @@ namespace Paint
 
         Color colorOfPen = Color.Gray;
 
-       
+        Workspace wp;
 
-        
+
 
         delegate void Ddraw(List<Point> points);
         public Form1()
         {
             InitializeComponent();
+            
+
+            wp = new tools.Workspace();
+
             bitfield = new Bitmap(1920, 1080);
             gr = Graphics.FromImage(bitfield);
+            
             my_draw = Ellipse;
         }
 
@@ -34,28 +40,35 @@ namespace Paint
         void Ellipse(List<Point> points)
         {
             var p = points[0];
-            //Graphics gr = CreateGraphics();
+            
+            //Graphics gr = CreateGraphics();           
             gr.DrawEllipse(new Pen(colorOfPen), p.X, p.Y, 50, 50);
 
+            wp.AddFigure(new figure(1, colorOfPen, points));
         }
 
         void Curve(List<Point> points)
         {
             var p = points[0];
             gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
+
+            wp.AddFigure(new figure(3, colorOfPen, points));
         }
 
         void Eraser(List<Point> points)
         {
             var p = points[0];
             gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
+            wp.AddFigure(new figure(4, Color.White, points));
         }
 
         void Line(List<Point> points)
         {
             var p1 = points[0];
             var p2 = points[1];
+            
             gr.DrawLine(new Pen(colorOfPen), p1, p2);
+            wp.AddFigure(new figure(2, colorOfPen, points));
         }
 
         private Rectangle pictureBox1OriginalRectangle;
@@ -86,12 +99,16 @@ namespace Paint
         {
 
         }
-        
+
         List<Point> points = new List<Point>();
+
+        // 0-rect 1-ellipse 2-line 3-curve 4-eraser
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (my_draw == Curve || my_draw == Eraser)
-            { flag = true; }
+            { 
+                flag = true; 
+            }
 
             if (my_draw != Line)
             {
@@ -99,13 +116,18 @@ namespace Paint
 
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
-
                 my_draw(points);
+                
+                if (my_draw == Ellipse)
+                {
+                    figure figure1 = new figure(1, colorOfPen, points);
+                    
+                }
                 pictureBox1.Image = bitfield;
             }
             else
             {
-                List<Point> points = new List<Point>();
+                //List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
                 flag = true;
             }
@@ -154,7 +176,7 @@ namespace Paint
 
                 my_draw(points);
                 pictureBox1.Image = bitfield;
-
+                points.Clear();
 
                 flag = false;
             }
@@ -167,15 +189,20 @@ namespace Paint
 
         private void ïðÿìàÿToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            my_draw = Line;
         }
 
         private void ïàëèòðàToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {               
+            {
                 colorOfPen = colorDialog1.Color;
             }
+        }
+
+        private void ñîõðàíèòüToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

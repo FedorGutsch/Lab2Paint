@@ -76,6 +76,7 @@
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
             сохранитьToolStripMenuItem.Size = new Size(133, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
+            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
             // 
             // назадToolStripMenuItem
             // 
@@ -158,6 +159,7 @@
             ClientSize = new Size(695, 330);
             Controls.Add(pictureBox1);
             Controls.Add(menuStrip1);
+            DoubleBuffered = true;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
