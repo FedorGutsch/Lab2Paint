@@ -159,6 +159,7 @@
             ClientSize = new Size(695, 330);
             Controls.Add(pictureBox1);
             Controls.Add(menuStrip1);
+            DoubleBuffered = true;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";

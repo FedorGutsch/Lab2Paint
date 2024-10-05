@@ -4,7 +4,7 @@ namespace tools
 {
     public class Workspace()
     {
-        Stack<figure> figureList;
+        Stack<figure> figureList = new Stack<figure>();
 
         public void AddFigure(figure figure)
         {
@@ -14,6 +14,7 @@ namespace tools
         {
             return figureList.Pop();
         }
+
     }
 
 
@@ -24,11 +25,11 @@ namespace tools
 
         List<Point>? points;
         
-        public figure(int type, Color color, List<Point> point)
+        public figure(int type, Color color, List<Point> points)
         {
             Type = type;
             Color = color;
-            Points = point;
+            Points = points;
         }
 
         public int Type
