@@ -4,7 +4,7 @@ namespace tools
 {
     public class Workspace()
     {
-        Stack<figure> figureList = new Stack<figure>();
+        public Stack<figure> figureList = new Stack<figure>();
 
         public void AddFigure(figure figure)
         {

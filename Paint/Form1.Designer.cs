@@ -43,6 +43,8 @@
             ластикToolStripMenuItem = new ToolStripMenuItem();
             палитраToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
+            saveFileDialog1 = new SaveFileDialog();
+            openFileDialog1 = new OpenFileDialog();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -68,26 +70,26 @@
             // импортироватьToolStripMenuItem
             // 
             импортироватьToolStripMenuItem.Name = "импортироватьToolStripMenuItem";
-            импортироватьToolStripMenuItem.Size = new Size(180, 22);
+            импортироватьToolStripMenuItem.Size = new Size(133, 22);
             импортироватьToolStripMenuItem.Text = "Открыть";
             // 
             // сохранитьToolStripMenuItem
             // 
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(180, 22);
+            сохранитьToolStripMenuItem.Size = new Size(133, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
             сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
             // 
             // назадToolStripMenuItem
             // 
             назадToolStripMenuItem.Name = "назадToolStripMenuItem";
-            назадToolStripMenuItem.Size = new Size(180, 22);
+            назадToolStripMenuItem.Size = new Size(133, 22);
             назадToolStripMenuItem.Text = "Назад";
             // 
             // впередToolStripMenuItem
             // 
             впередToolStripMenuItem.Name = "впередToolStripMenuItem";
-            впередToolStripMenuItem.Size = new Size(180, 22);
+            впередToolStripMenuItem.Size = new Size(133, 22);
             впередToolStripMenuItem.Text = "Вперед";
             // 
             // инструментыToolStripMenuItem
@@ -151,6 +153,10 @@
             pictureBox1.MouseMove += pictureBox1_MouseMove;
             pictureBox1.MouseUp += pictureBox1_MouseUp;
             // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -189,5 +195,7 @@
         private ToolStripMenuItem ластикToolStripMenuItem;
         private ToolStripMenuItem палитраToolStripMenuItem;
         private PictureBox pictureBox1;
+        private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
     }
 }
