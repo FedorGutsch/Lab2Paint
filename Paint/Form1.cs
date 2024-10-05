@@ -1,5 +1,7 @@
 
 
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using tools;
 
@@ -8,29 +10,23 @@ namespace Paint
 
     public partial class Form1 : Form
     {
-
         public Bitmap bitfield;
         Graphics gr;
-
-
         Color colorOfPen = Color.Gray;
-
         Workspace wp;
-
-
-
         delegate void Ddraw(List<Point> points);
         public Form1()
         {
             InitializeComponent();
-            
+
 
             wp = new tools.Workspace();
 
             bitfield = new Bitmap(1920, 1080);
             gr = Graphics.FromImage(bitfield);
-            
+
             my_draw = Ellipse;
+            Color colorforfedya = Color.FromArgb();
         }
 
         Ddraw my_draw;
@@ -39,36 +35,59 @@ namespace Paint
 
         void Ellipse(List<Point> points)
         {
-            var p = points[0];
-            
-            //Graphics gr = CreateGraphics();           
+            var p = points[0];         
             gr.DrawEllipse(new Pen(colorOfPen), p.X, p.Y, 50, 50);
-
             wp.AddFigure(new figure(1, colorOfPen, points));
         }
 
         void Curve(List<Point> points)
         {
             var p = points[0];
-            gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
-
-            wp.AddFigure(new figure(3, colorOfPen, points));
+            //gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
+            //wp.AddFigure(new figure(3, colorOfPen, points));
+            if (points.Count > 1)
+            {
+                using (Pen pen = new Pen(colorOfPen, 25))
+                {
+                    pen.StartCap = LineCap.Round;
+                    pen.EndCap = LineCap.Round;
+                    pen.LineJoin = LineJoin.Round;
+                    gr.SmoothingMode = SmoothingMode.AntiAlias;
+                    gr.DrawLines(pen, points.ToArray());
+                }
+            }
         }
 
         void Eraser(List<Point> points)
         {
             var p = points[0];
-            gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
-            wp.AddFigure(new figure(4, Color.White, points));
+            //gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
+            //wp.AddFigure(new figure(4, Color.White, points));
+            if (points.Count > 1)
+            {
+                using (Pen pen = new Pen(Color.White, 25))
+                {
+                    pen.StartCap = LineCap.Round;
+                    pen.EndCap = LineCap.Round;
+                    pen.LineJoin = LineJoin.Round;
+                    gr.SmoothingMode = SmoothingMode.AntiAlias;
+                    gr.DrawLines(pen, points.ToArray());
+                }
+            }
         }
 
         void Line(List<Point> points)
         {
             var p1 = points[0];
             var p2 = points[1];
-            
+
             gr.DrawLine(new Pen(colorOfPen), p1, p2);
             wp.AddFigure(new figure(2, colorOfPen, points));
+        }
+
+        void Rect(List<Point> points)
+        {
+
         }
 
         private Rectangle pictureBox1OriginalRectangle;
@@ -106,28 +125,25 @@ namespace Paint
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (my_draw == Curve || my_draw == Eraser)
-            { 
-                flag = true; 
+            {
+                flag = true;
             }
 
-            if (my_draw != Line)
+            if (my_draw != Line && my_draw != Curve && my_draw != Eraser)
             {
-                Bitmap copy = bitfield.Clone(new Rectangle(0, 0, bitfield.Width, bitfield.Height), bitfield.PixelFormat);
-
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
                 my_draw(points);
-                
+
                 if (my_draw == Ellipse)
                 {
                     figure figure1 = new figure(1, colorOfPen, points);
-                    
                 }
-                pictureBox1.Image = bitfield;
+
+                pictureBox1.Invalidate();
             }
             else
             {
-                //List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
                 flag = true;
             }
@@ -153,15 +169,22 @@ namespace Paint
         {
             if (flag == true)
             {
-                if (my_draw != Line)
+                if (my_draw == Curve || my_draw == Eraser)
                 {
-                    Bitmap copy = bitfield.Clone(new Rectangle(0, 0, bitfield.Width, bitfield.Height), bitfield.PixelFormat);
-
+                    points.Add(new Point(e.X, e.Y));
+                    my_draw(points);
+                    pictureBox1.Invalidate();
+                    if (points.Count > 15)
+                    {
+                        points.Clear();
+                    }
+                }
+                if (my_draw != Line && my_draw != Curve && my_draw != Eraser)
+                {
                     List<Point> points = new List<Point>();
                     points.Add(new Point(e.X, e.Y));
-
                     my_draw(points);
-                    pictureBox1.Image = bitfield;
+                    pictureBox1.Invalidate();
                 }
             }
         }
@@ -170,14 +193,10 @@ namespace Paint
         {
             if (flag == true)
             {
-                Bitmap copy = bitfield.Clone(new Rectangle(0, 0, bitfield.Width, bitfield.Height), bitfield.PixelFormat);
-
                 points.Add((new Point(e.X, e.Y)));
-
                 my_draw(points);
-                pictureBox1.Image = bitfield;
+                pictureBox1.Invalidate();
                 points.Clear();
-
                 flag = false;
             }
         }
@@ -194,10 +213,19 @@ namespace Paint
 
         private void ïàëèòðàToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+        }
+        private void ïàëèòðàToolStripMenuItem_Click(Object sender, EventArgs e)
+        {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 colorOfPen = colorDialog1.Color;
             }
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(bitfield, 0, 0);
         }
 
         private void ñîõðàíèòüToolStripMenuItem_Click(object sender, EventArgs e)
