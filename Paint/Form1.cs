@@ -1,7 +1,9 @@
-
-
+using System.Numerics;
+using System.Text.Json;
 using System.Windows.Forms;
 using tools;
+using System.Text.Json;
+using System.Drawing;
 
 namespace Paint
 {
@@ -23,13 +25,13 @@ namespace Paint
         public Form1()
         {
             InitializeComponent();
-            
+
 
             wp = new tools.Workspace();
 
             bitfield = new Bitmap(1920, 1080);
             gr = Graphics.FromImage(bitfield);
-            
+
             my_draw = Ellipse;
         }
 
@@ -40,7 +42,7 @@ namespace Paint
         void Ellipse(List<Point> points)
         {
             var p = points[0];
-            
+
             //Graphics gr = CreateGraphics();           
             gr.DrawEllipse(new Pen(colorOfPen), p.X, p.Y, 50, 50);
 
@@ -66,7 +68,7 @@ namespace Paint
         {
             var p1 = points[0];
             var p2 = points[1];
-            
+
             gr.DrawLine(new Pen(colorOfPen), p1, p2);
             wp.AddFigure(new figure(2, colorOfPen, points));
         }
@@ -106,8 +108,8 @@ namespace Paint
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (my_draw == Curve || my_draw == Eraser)
-            { 
-                flag = true; 
+            {
+                flag = true;
             }
 
             if (my_draw != Line)
@@ -117,11 +119,11 @@ namespace Paint
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
                 my_draw(points);
-                
+
                 if (my_draw == Ellipse)
                 {
                     figure figure1 = new figure(1, colorOfPen, points);
-                    
+
                 }
                 pictureBox1.Image = bitfield;
             }
@@ -200,9 +202,111 @@ namespace Paint
             }
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+            saveFileDialog1.Filter = "JSON files (*.json)|*.json";
+            saveFileDialog1.Title = "Сохранить файл как";
+            saveFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
+            saveFileDialog1.AddExtension = true; // Добавление расширения, если его нет
+            
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog1.FileName;
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+
+                    await JsonSerializer.SerializeAsync<Stack<figure>>(fs, wp.figureList);
+                    Console.WriteLine("Объект сериализован");
+                }
+            }
+            
+        }
+
+        private async void импортироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "JSON files (*.json)|*.json";
+            openFileDialog1.Title = "Открыть файл ";
+            openFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
+            openFileDialog1.AddExtension = true; // Добавление расширения, если его нет
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog1.FileName;
+
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+                    wp.figureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
+                }
+            }
+
+            
+
+            drawFromStack(wp.figureList);
+        }
+
+
+        // 0-rect 1-ellipse 2-line 3-curve 4-eraser
+        public void drawFromStack(Stack<figure> st)
+        {
+            
+
+            using (Graphics g = Graphics.FromImage(bitfield))
+            {
+                g.Clear(Color.White);
+                pictureBox1.Invalidate();
+            }
+
+            List<figure> p = new List<figure>();
+            
+            while (st.Count > 0)
+            {
+                var f = st.Pop();
+                p.Add(f);
+            }
+
+            foreach (figure f1 in p) 
+            {
+                switch (f1.Type)
+                {
+                    case 0:
+                        {
+                            my_draw = Ellipse;
+                            my_draw(f1.Points);
+                            break;
+                        }
+                    case 1:
+                        {
+                            my_draw = Ellipse;
+                            my_draw(f1.Points);
+                            break;
+                        }
+                    case 2:
+                        {
+                            my_draw = Line;
+                            my_draw(f1.Points);
+                            break;
+                        }
+                    case 3:
+                        {
+                            my_draw = Curve;
+                            my_draw(f1.Points);
+                            break;
+                        }
+                    case 4:
+                        {
+                            my_draw = Eraser;
+                            my_draw(f1.Points);
+                            break;
+                        }
+                }
+            }
+
+            
+
+
+            
         }
     }
 }

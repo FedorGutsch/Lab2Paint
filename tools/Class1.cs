@@ -1,10 +1,15 @@
 ﻿using System.Drawing;
+using System.Xml.Schema;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace tools
 {
+
+    [Serializable]
     public class Workspace()
     {
-        Stack<figure> figureList = new Stack<figure>();
+        public Stack<figure> figureList = new Stack<figure>();
 
         public void AddFigure(figure figure)
         {
@@ -14,7 +19,7 @@ namespace tools
         {
             return figureList.Pop();
         }
-
+      
     }
 
 
