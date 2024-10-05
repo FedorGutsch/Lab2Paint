@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using tools;
 using System.Text.Json;
 using System.Drawing;
+using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 
 namespace Paint
 {
@@ -14,43 +16,28 @@ namespace Paint
         Graphics gr;
         Color colorOfPen = Color.Gray;
         Workspace wp;
-
-
-
         delegate void Ddraw(List<Point> points, Color color);
         public Form1()
         {
             InitializeComponent();
-
-
             wp = new tools.Workspace();
-
             bitfield = new Bitmap(1920, 1080);
             gr = Graphics.FromImage(bitfield);
-
             my_draw = Ellipse;
-            Color colorforfedya = Color.FromArgb();
+
         }
-
         Ddraw my_draw;
-
         bool flag = false;
-
         void Ellipse(List<Point> points, Color color)
         {
-            var p = points[0];
-
-            //Graphics gr = CreateGraphics();           
+            var p = points[0];          
             gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
-
             wp.AddFigure(new figure(1, color, points));
         }
 
         void Curve(List<Point> points, Color color)
         {
             var p = points[0];
-            //gr.DrawRectangle(new Pen(colorOfPen), p.X, p.Y, 1, 1);
-            //wp.AddFigure(new figure(3, colorOfPen, points));
             if (points.Count > 1)
             {
                 using (Pen pen = new Pen(colorOfPen, 25))
@@ -67,8 +54,6 @@ namespace Paint
         void Eraser(List<Point> points, Color color)
         {
             var p = points[0];
-            //gr.DrawRectangle(Pens.White, p.X, p.Y, 1, 1);
-            //wp.AddFigure(new figure(4, Color.White, points));
             if (points.Count > 1)
             {
                 using (Pen pen = new Pen(Color.White, 25))
@@ -86,7 +71,6 @@ namespace Paint
         {
             var p1 = points[0];
             var p2 = points[1];
-
             gr.DrawLine(new Pen(color), p1, p2);
             wp.AddFigure(new figure(2, color, points));
         }
@@ -178,7 +162,7 @@ namespace Paint
                 if (my_draw == Curve || my_draw == Eraser)
                 {
                     points.Add(new Point(e.X, e.Y));
-                    my_draw(points);
+                    my_draw(points, colorOfPen);
                     pictureBox1.Invalidate();
                     if (points.Count > 15)
                     {
@@ -189,7 +173,7 @@ namespace Paint
                 {
                     List<Point> points = new List<Point>();
                     points.Add(new Point(e.X, e.Y));
-                    my_draw(points);
+                    my_draw(points, colorOfPen);
                     pictureBox1.Invalidate();
                 }
             }
@@ -200,7 +184,7 @@ namespace Paint
             if (flag == true)
             {
                 points.Add((new Point(e.X, e.Y)));
-                my_draw(points);
+                my_draw(points, colorOfPen);
                 pictureBox1.Invalidate();
                 points.Clear();
                 flag = false;
@@ -215,11 +199,6 @@ namespace Paint
         private void ïðÿìàÿToolStripMenuItem_Click(object sender, EventArgs e)
         {
             my_draw = Line;
-        }
-
-        private void ñîõðàíèòüToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
         private void ïàëèòðàToolStripMenuItem_Click(Object sender, EventArgs e)
         {
@@ -249,6 +228,11 @@ namespace Paint
                 }
             }
             
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(bitfield, 0, 0);
         }
 
         private async void èìïîðòèðîâàòüToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,11 +315,6 @@ namespace Paint
                         }
                 }
             }
-
-            
-
-
-            
         }
     }
 }
