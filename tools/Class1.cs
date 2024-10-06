@@ -2,6 +2,7 @@
 using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 namespace tools
 {
@@ -37,21 +38,33 @@ namespace tools
         int b;
         
         List<Point>? points;
-        
 
 
-        public figure(int type, Color color, List<Point> points)
+       
+        public figure(int type, int R, int G, int B, List<Point> points)
         {
             Type = type;
-            r = color.R; g = color.G; b = color.B;
-           
+            r = R; g = G; b = B;
+     
             Points = points;
         }
 
-        public Color Color 
-        { 
-            get { return Color.FromArgb(r, g, b); }
+       public int R
+        {
+            get { return r; }
+            set { r = value; }
         }
+        public int G
+        {
+            get { return g; }
+            set { g = value; }
+        }
+        public int B
+        {
+            get { return b; }
+            set { b = value; }
+        }
+
 
         public int Type
         {

@@ -31,11 +31,12 @@ namespace Paint
         }
         Ddraw my_draw;
         bool flag = false;
+        // 0-rect 1-ellipse 2-line 3-curve 4-eraser
         void Ellipse(List<Point> points, Color color)
         {
             var p = points[0];
             gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
-            wp.AddFigure(new figure(1, color, points));
+            wp.AddFigure(new figure(1, color.R, color.G, color.B, points));
         }
 
         void Curve(List<Point> points, Color color)
@@ -50,6 +51,7 @@ namespace Paint
                     pen.LineJoin = LineJoin.Round;
                     gr.SmoothingMode = SmoothingMode.AntiAlias;
                     gr.DrawLines(pen, points.ToArray());
+                    wp.AddFigure(new figure(3, color.R, color.G, color.B, points));
                 }
             }
         }
@@ -66,6 +68,7 @@ namespace Paint
                     pen.LineJoin = LineJoin.Round;
                     gr.SmoothingMode = SmoothingMode.AntiAlias;
                     gr.DrawLines(pen, points.ToArray());
+                    wp.AddFigure(new figure(4, color.R, color.G, color.B, points));
                 }
             }
         }
@@ -75,12 +78,21 @@ namespace Paint
             var p1 = points[0];
             var p2 = points[1];
             gr.DrawLine(new Pen(color), p1, p2);
-            wp.AddFigure(new figure(2, color, points));
+            wp.AddFigure(new figure(2, color.R, color.G, color.B, points));
         }
 
-        void Rect(List<Point> points)
+        void Rect(List<Point> points, Color color)
         {
+            var p1 = points[0];
+            var p2 = points[1];
 
+            int x = Math.Min(p1.X, p2.X);
+            int y = Math.Min(p1.Y, p2.Y);
+            int width = Math.Abs(p2.X - p1.X);
+            int height = Math.Abs(p2.Y - p1.Y);
+            gr.DrawRectangle(new Pen(color), x, y, width, height);
+            
+            wp.AddFigure(new figure(0, color.R, color.G, color.B, points));
         }
 
         private Rectangle pictureBox1OriginalRectangle;
@@ -109,7 +121,7 @@ namespace Paint
 
         private void ÔˇÏÓÛ„ÓÎ¸ÌËÍToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            my_draw = Rect;
         }
 
         List<Point> points = new List<Point>();
@@ -122,7 +134,7 @@ namespace Paint
                 flag = true;
             }
 
-            if (my_draw != Line && my_draw != Curve && my_draw != Eraser)
+            if (my_draw != Line && my_draw != Curve && my_draw != Eraser && my_draw != Rect)
             {
                 List<Point> points = new List<Point>();
                 points.Add(new Point(e.X, e.Y));
@@ -130,7 +142,7 @@ namespace Paint
 
                 if (my_draw == Ellipse)
                 {
-                    figure figure1 = new figure(1, colorOfPen, points);
+                    figure figure1 = new figure(1, colorOfPen.R, colorOfPen.G, colorOfPen.B, points);
                 }
 
                 pictureBox1.Invalidate();
@@ -173,7 +185,7 @@ namespace Paint
                         points.Add(new Point(e.X, e.Y));
                     }
                 }
-                if (my_draw != Line && my_draw != Curve && my_draw != Eraser)
+                if (my_draw != Line && my_draw != Curve && my_draw != Eraser && my_draw != Rect)
                 {
                     List<Point> points = new List<Point>();
                     points.Add(new Point(e.X, e.Y));
@@ -226,7 +238,6 @@ namespace Paint
 
                 using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
-
                     await JsonSerializer.SerializeAsync<Stack<figure>>(fs, wp.FigureList);
                     Console.WriteLine("Œ·˙ÂÍÚ ÒÂË‡ÎËÁÓ‚‡Ì");
                 }
@@ -254,14 +265,18 @@ namespace Paint
                 {
                     wp.FigureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
                 }
+                drawFromStack(wp.FigureList);
+                canceled.Clear();
             }
-            drawFromStack(wp.FigureList);
+            
         }
 
 
         // 0-rect 1-ellipse 2-line 3-curve 4-eraser
         public void drawFromStack(Stack<figure> st)
         {
+
+
             using (Graphics g = Graphics.FromImage(bitfield))
             {
                 g.Clear(Color.White);
@@ -283,29 +298,29 @@ namespace Paint
                     case 0:
                         {
 
-                            my_draw = Ellipse;
-                            my_draw(f1.Points, f1.Color);
+                            my_draw = Rect;
+                            my_draw(f1.Points, Color.FromArgb(f1.R,f1.G,f1.B));
                             break;
                         }
                     case 1:
                         {
 
                             my_draw = Ellipse;
-                            my_draw(f1.Points, f1.Color);
+                            my_draw(f1.Points, Color.FromArgb(f1.R,f1.G,f1.B));
                             break;
                         }
                     case 2:
                         {
 
                             my_draw = Line;
-                            my_draw(f1.Points, f1.Color);
+                            my_draw(f1.Points, Color.FromArgb(f1.R,f1.G,f1.B));
                             break;
                         }
                     case 3:
                         {
 
                             my_draw = Curve;
-                            my_draw(f1.Points, f1.Color);
+                            my_draw(f1.Points, Color.FromArgb(f1.R,f1.G,f1.B));
                             break;
                         }
                     case 4:
