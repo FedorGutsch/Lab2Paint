@@ -17,20 +17,23 @@ namespace Paint
         Color colorOfPen = Color.Gray;
         Workspace wp;
         delegate void Ddraw(List<Point> points, Color color);
-        public Form1()
+        
+        Stack<figure> canceled = new Stack<figure>();
+        
+    public Form1()
         {
             InitializeComponent();
             wp = new tools.Workspace();
             bitfield = new Bitmap(1920, 1080);
             gr = Graphics.FromImage(bitfield);
             my_draw = Ellipse;
-
+            
         }
         Ddraw my_draw;
         bool flag = false;
         void Ellipse(List<Point> points, Color color)
         {
-            var p = points[0];          
+            var p = points[0];
             gr.DrawEllipse(new Pen(color), p.X, p.Y, 50, 50);
             wp.AddFigure(new figure(1, color, points));
         }
@@ -40,7 +43,7 @@ namespace Paint
             var p = points[0];
             if (points.Count > 1)
             {
-                using (Pen pen = new Pen(colorOfPen, 25))
+                using (Pen pen = new Pen(color, 25))
                 {
                     pen.StartCap = LineCap.Round;
                     pen.EndCap = LineCap.Round;
@@ -167,6 +170,7 @@ namespace Paint
                     if (points.Count > 15)
                     {
                         points.Clear();
+                        points.Add(new Point(e.X, e.Y));
                     }
                 }
                 if (my_draw != Line && my_draw != Curve && my_draw != Eraser)
@@ -215,7 +219,7 @@ namespace Paint
             saveFileDialog1.Title = "Сохранить файл как";
             saveFileDialog1.DefaultExt = "json"; // Установка расширения по умолчанию
             saveFileDialog1.AddExtension = true; // Добавление расширения, если его нет
-            
+
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveFileDialog1.FileName;
@@ -223,11 +227,11 @@ namespace Paint
                 using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
 
-                    await JsonSerializer.SerializeAsync<Stack<figure>>(fs, wp.figureList);
+                    await JsonSerializer.SerializeAsync<Stack<figure>>(fs, wp.FigureList);
                     Console.WriteLine("Объект сериализован");
                 }
             }
-            
+
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -248,73 +252,93 @@ namespace Paint
 
                 using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
-                    wp.figureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
+                    wp.FigureList = (Stack<figure>)await JsonSerializer.DeserializeAsync<Stack<figure>>(fs);
                 }
-            }           
-            drawFromStack(wp.figureList);            
+            }
+            drawFromStack(wp.FigureList);
         }
 
 
         // 0-rect 1-ellipse 2-line 3-curve 4-eraser
         public void drawFromStack(Stack<figure> st)
         {
-            
-
             using (Graphics g = Graphics.FromImage(bitfield))
             {
                 g.Clear(Color.White);
                 pictureBox1.Invalidate();
             }
 
-            List<figure> p = new List<figure>();
-            
+            Stack<figure> p = new Stack<figure>();
+
             while (st.Count > 0)
             {
                 var f = st.Pop();
-                p.Add(f);
+                p.Push(f);
             }
 
-            foreach (figure f1 in p) 
+            foreach (figure f1 in p)
             {
                 switch (f1.Type)
                 {
                     case 0:
                         {
-                            
+
                             my_draw = Ellipse;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 1:
                         {
-                            
+
                             my_draw = Ellipse;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 2:
                         {
-                            
+
                             my_draw = Line;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 3:
                         {
-                           
+
                             my_draw = Curve;
                             my_draw(f1.Points, f1.Color);
                             break;
                         }
                     case 4:
                         {
-                           
+
                             my_draw = Eraser;
                             my_draw(f1.Points, Color.White);
                             break;
                         }
                 }
             }
+        }
+
+        private void назадToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (wp.FigureList.Count != 0)
+            {
+                canceled.Push(wp.RemoveFigure());
+                drawFromStack(wp.FigureList);
+            }          
+        }
+
+        private void впередToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (canceled.Count != 0)
+            {
+                var fg = canceled.Pop();
+
+                wp.AddFigure(fg);
+
+                drawFromStack(wp.FigureList);
+            }
+            
         }
     }
 }

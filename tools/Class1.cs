@@ -9,17 +9,22 @@ namespace tools
     [Serializable]
     public class Workspace()
     {
-        public Stack<figure> figureList = new Stack<figure>();
+        Stack<figure> figureList = new Stack<figure>();
 
         public void AddFigure(figure figure)
         {
             figureList.Push(figure); 
         }
-        public figure RemoveFigure(figure figure)
+        public figure RemoveFigure()
         {
             return figureList.Pop();
         }
-      
+
+        public Stack<figure> FigureList
+        {
+            get { return figureList; }
+            set { figureList = value; }
+        }
     }
 
 
@@ -27,7 +32,9 @@ namespace tools
     {
         int type;
 
-        string colorCode;
+        int r;
+        int g;
+        int b;
         
         List<Point>? points;
         
@@ -36,14 +43,14 @@ namespace tools
         public figure(int type, Color color, List<Point> points)
         {
             Type = type;
-            colorCode = ColorTranslator.ToHtml(color); 
+            r = color.R; g = color.G; b = color.B;
            
             Points = points;
         }
 
         public Color Color 
         { 
-            get { return ColorTranslator.FromHtml(colorCode); }
+            get { return Color.FromArgb(r, g, b); }
         }
 
         public int Type
